@@ -363,7 +363,6 @@ int main(int, char**)
 		displayframe.convertTo(displayframe,CV_8U);
 
 		outputVideo << displayframe;
-		printf("check19\n");
 	#ifdef SHOW
         imshow(windowName, displayframe);
 	#endif
