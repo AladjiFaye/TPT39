@@ -1,0 +1,6 @@
+The cpp files in the FPGA and GPU are nearly identical.
+
+Compute units of 8 :  (pour calculer FLOPs/s : Freq * (num_comput_units) * (SIMD_threads)
+Mem bandwidth = 800 MHz * 8 * 2 = 12.8 GB/s
+(To check performances : launch quartus vector_add/top.qpf
+FMax, kernel_clk : vector_add/vector_add/top.sta.rpt

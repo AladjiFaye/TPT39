@@ -1,0 +1,96 @@
+Parallelism : 
+-Task parallelism
+-Data parallelism (ex : somme de vecteurs)
+-Pipeline : parallelism is in time : chaque étape est dépendante de l'étape précédente
+pb des pipelines : dépend de la tâche la plus lente
+the performance of the pipeline is determined by the slowest state
+
+Parallelism :Amdahl's law: speedip = 1/(S + P/N); S : fraction "serial" (?) de l'application; P : fraction parallelisable de l'appli; N : Processor speedup
+Ex : S[i] = a[i] + b[i] => 50% Disk access, serial; 50 % : calcul
+
+
+Utilisation du cache pour améliorer performances (pour cacher la latence)
+
+Mémoires : 
+DRAM (Dynamic), SRAM (Static); SRAM : efficacité toujours à 100 % pb : SRAM : 
+pb : DRAM : quand on lit DRAM, la donnée est détruite; il faut la réécrire à chaque fois; de plus, latence variable
+DRAM : + efficace d'utiliser plusieurs "banques"
+
+Translation Lookaside buffer : comme un cache, peut stocker une partie de la tradiction des pages virtuelles/physiques
+Page Table : table principale, stocké dans le DDR
+
+Les performances s'améliorent quand on les met dans le cache
+
+
+
+137.194.66.09 adresse pour le streamline
+
+
+
+GFLOPS/s max pour CPU : 2x4 + 1.4x4 = 13.6 GFLOPS/s
+pour le GPU : 6x17x0.6 = 61.2 GFLOPS/s
+
+pour obtenir l'ID d'un thread : get_global_id
+
+pour obtenir performances : inclure <time.h>, et utiliser clock_gettime
+
+performances pour vector_add : 
+1) temps pour kernel
+2) temps pour copier dans les buffer
+3) faire varier N
+4) mesurer flops/s (on doit avoir la kernel value)
+
+clgetEventProfilingInfo (pour vérifier performances Kernel)
+
+Pour des faibles valeurs de N, le CPU est + rapide (N = 5000)
+Pour N = 500000, GPU + rapide
+Pour N = 50000, CPU + rapide
+
+Pour bien calculer le temps GPU, il faut retirer le temps de copie
+
+FLOPS pour GPU avec map, 5000 : 8.3 MFLOPS (les FLOPS pour CPU sont plus élevés pour 5000)
+FLOPS pour GPU avec map, 500000 : 100 MFLOPS
+pour 50000000 : 
+
+La méthode "map" permet d'éviter de perdre du temps dans la copie en mappant les input_buf avec les input_ (il faut unmap avant de lancer le kernel)
+Pour calcul matriciel : on utilise 2 dimensions : work_dim = 2, global_work_size : [N,N]; les IDs des threads sont renvoyés en 2 dimensions
+
+
+Roofline 
+Arithmetic Intensity : FLOPS/Bytes (ex pour la somme de deux vecteurs : 1/12)
+Peak Bandwidth B, Bytes/s (ex : 14 GB/s)
+Peak Performance : pi, FLOPs/s
+Perf = min (pi, BxI)
+
+Kernel can be memory limited (pour un programme, les FLOPS/s ne changeront pas, quelque soit le nb de cores) or compute limited (vitesse max liée aux cores)
+
+we can plot Roofline with the roofline.py script
+
+Arithmetic intensity pour multiplication matrice : M*N*K + M*N*K FLOPs, 4*(2K*M*N) Bytes
+on peut "stocker" une colonne dans un cache; ça permet d'avoir 4*(K*M*N) Bytes
+Ou Matrix Multiplication Tiling; on peut garder des blocs de matrics dans le cache poru réduire l'accès à la mémoire
+On peut stocker des output elements dans un workgroup pour utiliser les caches; un workgroup par tile (utilisera le cache au lieu de recourir à un accès à la mémoire)
+Ex pour une matrice 4*4 : on peut la diviser en 4 matrices 2*2, donc 4 workgroup (le global size sera 4*4, local size 2*2 pour chaque workgroup)
+using workgroups : we can reuse the data in the cache
+cf https://gitpitch.com/amusant/tpt39/tmpdev?grs=github&t=beige&p=ocl_syntax/#/8
+
+Faire la multiplication matricielle simple, et ensuite utiliser les workgroup pour voir si amélioration de performances
+les "fence" https://gitpitch.com/amusant/tpt39/tmpdev?grs=github&t=beige&p=ocl_syntax/#/10 peuvent être utilisées pour attendre qu'un job soit terminé avant d'en lancer un autre, permet de synchroniser
+
+
+projet : faire le filtrage en cl , càd écrire convolution dans le kernel (le filtrage est déjà fait sur le CPU, partie .cpp)
+NB : Sobel est utilisé pour edge detection; en superposant Gauss et Sobel, on obtient un effet "cartoon"
+Scharr est à peu près comme Sobel (?)
+!! il faut aussi modifier le makefile
+padding d'une matrice : ajouter des lignes et colonnes
+im2col : décomposer en plusieurs parties
+utiliser batches (ex : batches de 16 frames)
+
+FPGA : Field Programmable Gate Array : tout ce qu'on peut faire en hardware, on peut le faire en FPGA; l'avantage est que le FPGA est programmable
+contrairement à gpu, la frequence du fpga est modifiable
+FPGA n'a pas de MMU, donc pas de mémoire virtuelle; pas de possibilité de map, seulement de copier les buffer
+
+tp : chger parametres core et SIMD
+make sim : montrer les résultats
+Pour FPGA, on travaille avec a405
+voir aussi les diff avec le host program du GPU
