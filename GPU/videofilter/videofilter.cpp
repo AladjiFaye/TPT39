@@ -409,16 +409,20 @@ int main(int, char**)
 
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
 		//test
+		printf("cool");
+
 		displayframe.convertTo(displayframe,CV_8U);
+		printf("cool2");
 
 		outputVideo << displayframe;
+		printf("cool3");
+
 	#ifdef SHOW
         imshow(windowName, displayframe);
 	#endif
 
 		diff = difftime (end,start);
 		tot+=diff;
-		printf("cool");
 	}
 	outputVideo.release();
 	camera.release();
