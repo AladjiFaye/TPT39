@@ -158,15 +158,10 @@ cl_kernel kernel;
 Mat executeConvolution(Mat& inputMat, float * filterArray) {
 	Mat outputMat;
 
-
-
-
   inputMat.convertTo(inputMat, CV_32FC1);
 
   input = (float*)inputMat.data;
   filter = filterArray;
-
-
 
   //clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
   //clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
@@ -177,8 +172,13 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
       global_work_size, NULL, 2, write_event, &kernel_event);
   checkError(status, "Failed to launch kernel");
 
-  status=clWaitForEvents(1,&kernel_event);
+
+	// on test en enlevant l'attente
+  /*status=clWaitForEvents(1,&kernel_event);
     checkError(status, "Failed  wait");
+*/
+
+
 /*
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
