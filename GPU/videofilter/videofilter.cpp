@@ -291,7 +291,7 @@ int main(int, char**)
 
     float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
     float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
-    //float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
+    float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
 
 		//buffers
 		input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
@@ -382,8 +382,8 @@ int main(int, char**)
     Mat grayframe1 = executeConvolution(grayframe, gaussianFilter);
     Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter);
     Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter);
-    edge_x = executeConvolution(grayframe3, SobelXFilter);
-    edge_y = executeConvolution(grayframe3, SobelXFilter);
+		edge_y = executeConvolution(grayframe3, SobelYFilter);
+		edge_x = executeConvolution(grayframe3, SobelXFilter);
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
 
