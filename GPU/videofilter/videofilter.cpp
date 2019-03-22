@@ -397,8 +397,8 @@ int main(int, char**)
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
 
-		memcpy(grayframe.data, grayframe3,640*360*sizeof(float));
-		grayframe.convertTo(grayframe, CV_8U);
+	//	memcpy(grayframe.data, grayframe3,640*360*sizeof(float));
+		//grayframe.convertTo(grayframe, CV_8U);
 
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
@@ -407,9 +407,13 @@ int main(int, char**)
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
     	//memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
 			displayframe = Mat::zeros(360,640,CV_8U);
-		grayframe.copyTo(displayframe,edge);
 
-        cvtColor(displayframe, displayframe, CV_GRAY2BGR);
+			memcpy(grayframe.data, grayframe1,640*360*sizeof(float));
+			grayframe.convertTo(grayframe, CV_8U);
+
+			grayframe.copyTo(displayframe,edge);
+
+        cvtColor(grayframe, displayframe, CV_GRAY2BGR);
 		//test
 		//displayframe.convertTo(displayframe,CV_8U);
 
