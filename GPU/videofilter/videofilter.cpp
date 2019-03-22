@@ -393,9 +393,13 @@ int main(int, char**)
 		printf("5\n");
 
 		edge_x = executeConvolution(grayframe3, SobelXFilter);
+		printf("6");
 
 		edge_x.convertTo(edge_x, CV_8U);
+		printf("7");
+
 		edge_y.convertTo(edge_y, CV_8U);
+		printf("8");
 
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
