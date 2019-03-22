@@ -284,8 +284,8 @@ int main(int, char**)
 
 
     float gaussianFilter[9] = {0,0,0,0,1,0,0,0,0};
-    float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
-    float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
+  //  float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
+    //float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
 
 		//buffers
 		input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
@@ -391,10 +391,10 @@ int main(int, char**)
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
 		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
-		//edge_x = Mat::zeros(360,640,CV_32FC1);
-		//edge_y = Mat::zeros(360,640,CV_32FC1);
-		edge_x = Mat(360,640,CV_32FC1,edge_x_array);
-		edge_y = Mat(360,640,CV_32FC1,edge_y_array);
+		edge_x = Mat::zeros(360,640,CV_32FC1);
+		edge_y = Mat::zeros(360,640,CV_32FC1);
+		//edge_x = Mat(360,640,CV_32FC1,edge_x_array);
+		//edge_y = Mat(360,640,CV_32FC1,edge_y_array);
 
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
