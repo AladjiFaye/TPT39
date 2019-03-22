@@ -184,7 +184,7 @@ float *  executeConvolution(float * inputArray, float * filterArray) {
   clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 	//printf("check6\n");
 
-  const size_t global_work_size[2] = {640,360};
+  const size_t global_work_size[2] = {360,640};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
       global_work_size, NULL, 2, write_event, &kernel_event);
   checkError(status, "Failed to launch kernel");
@@ -302,8 +302,8 @@ int main(int, char**)
 
 		//mapping values to buffers
 
-		int rows = 640;
-	  int cols = 360;
+		int rows = 360;
+	  int cols = 640;
 	  // Set kernel arguments.
 	  unsigned argi = 0;
 
@@ -383,17 +383,17 @@ int main(int, char**)
 		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
 
 		//convert exdgexarray and edgeyarray to edgex et edgey
-		//edge_x = Mat::zeros(640,360,CV_32FC1);
-		//edge_y = Mat::zeros(640,360,CV_32FC1);
+		//edge_x = Mat::zeros(360,640,CV_32FC1);
+		//edge_y = Mat::zeros(360,640,CV_32FC1);
 		printf("ok\n");
 		//test
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
 		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
-		//edge_x = Mat::zeros(640,360,CV_32FC1);
-		//edge_y = Mat::zeros(640,360,CV_32FC1);
-		edge_x = Mat(640,360,CV_32FC1,edge_x_array);
-		edge_y = Mat(640,360,CV_32FC1,edge_y_array);
+		//edge_x = Mat::zeros(360,640,CV_32FC1);
+		//edge_y = Mat::zeros(360,640,CV_32FC1);
+		edge_x = Mat(360,640,CV_32FC1,edge_x_array);
+		edge_y = Mat(360,640,CV_32FC1,edge_y_array);
 
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
@@ -407,7 +407,7 @@ int main(int, char**)
         cvtColor(edge, edge_inv, CV_GRAY2BGR);
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
     	//memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
-			displayframe = Mat::zeros(640,360,CV_8U);
+			displayframe = Mat::zeros(360,640,CV_8U);
 		grayframe.copyTo(displayframe,edge);
 
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
