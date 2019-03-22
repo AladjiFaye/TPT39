@@ -386,7 +386,7 @@ int main(int, char**)
 		Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter);
 		printf("4\n");
 
-		edge_x = executeConvolution(grayframe3, SobelXFilter);
+		edge_x = executeConvolution(grayframe3, gaussianFilter);
 		printf("6");
 		//edge_y = executeConvolution(grayframe3, SobelYFilter);
 		//printf("5\n");
