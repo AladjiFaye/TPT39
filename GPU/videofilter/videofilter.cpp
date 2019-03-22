@@ -19,7 +19,7 @@ void print_clbuild_errors(cl_program program,cl_device_id device)
 		char buffer[2048];
 		clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &length);
 		cout<<"--- Build log ---\n "<<buffer<<endl;
-		exit(1); 
+		exit(1);
 	}
 
 unsigned char ** read_file(const char *name) {
@@ -375,6 +375,7 @@ int main(int, char**)
 				printf("check17\n");
 
 		outputVideo << displayframe;
+		printf("check19\n");
 	#ifdef SHOW
         imshow(windowName, displayframe);
 	#endif
