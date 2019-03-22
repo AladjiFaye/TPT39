@@ -374,7 +374,7 @@ int main(int, char**)
 		grayframe.convertTo(grayframe,CV_32FC1);
 
 		float * grayframe_array = (float *)malloc(640*360*sizeof(float));
-		memcpy(grayframe_array,pivot.data,640*360*sizeof(float));
+		memcpy(grayframe_array,grayframe.data,640*360*sizeof(float));
 
     float * grayframe1 = executeConvolution(grayframe_array, gaussianFilter);
     float * grayframe2 = executeConvolution(grayframe1, gaussianFilter);
@@ -392,7 +392,7 @@ int main(int, char**)
 		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
 		//edge_x = Mat::zeros(640,360,CV_32FC1);
 		//edge_y = Mat::zeros(640,360,CV_32FC1);
-		edge_x = Mat(640,360,CV_32FC1,edge_x_b array);
+		edge_x = Mat(640,360,CV_32FC1,edge_x_array);
 		edge_y = Mat(640,360,CV_32FC1,edge_y_array);
 
 		edge_x.convertTo(edge_x, CV_8U);
