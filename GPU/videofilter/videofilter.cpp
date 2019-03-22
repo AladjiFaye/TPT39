@@ -363,6 +363,7 @@ int main(int, char**)
 		displayframe.convertTo(displayframe,CV_8U);
 
 		outputVideo << displayframe;
+		printf("count : %d\n",count);
 	#ifdef SHOW
         imshow(windowName, displayframe);
 	#endif
