@@ -371,8 +371,7 @@ int main(int, char**)
 		Scharr(grayframe, edge_x, CV_8U, 0, 1, 1, 0, BORDER_DEFAULT );
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
     */
-		Mat pivot = grayframe;
-		grayframe.convertTo(pivot,CV_32F/*C1*/);
+		grayframe.convertTo(grayframe,CV_32FC1);
 
 		float * grayframe_array = (float *)malloc(640*360*sizeof(float));
 		memcpy(grayframe_array,pivot.data,640*360*sizeof(float));
@@ -384,20 +383,22 @@ int main(int, char**)
 		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
 
 		//convert exdgexarray and edgeyarray to edgex et edgey
-		//edge_x = Mat::zeros(640,360,CV_32F/*C1*/);
-		//edge_y = Mat::zeros(640,360,CV_32F/*C1*/);
+		//edge_x = Mat::zeros(640,360,CV_32FC1);
+		//edge_y = Mat::zeros(640,360,CV_32FC1);
 		printf("ok\n");
 		//test
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
 		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
-		//edge_x = Mat::zeros(640,360,CV_32F/*C1*/);
-		//edge_y = Mat::zeros(640,360,CV_32F/*C1*/);
-		edge_x = Mat(640,360,CV_32FC1,edge_x_array);
+		//edge_x = Mat::zeros(640,360,CV_32FC1);
+		//edge_y = Mat::zeros(640,360,CV_32FC1);
+		edge_x = Mat(640,360,CV_32FC1,edge_x_b array);
 		edge_y = Mat(640,360,CV_32FC1,edge_y_array);
 
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
+
+		memcpy(grayframe.data, grayframe3,640*360*sizeof(float));
 
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
@@ -409,14 +410,9 @@ int main(int, char**)
 
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
 		//test
-		printf("cool");
-
 		displayframe.convertTo(displayframe,CV_8U);
-		printf("cool2");
 
 		outputVideo << displayframe;
-		printf("cool3");
-
 	#ifdef SHOW
         imshow(windowName, displayframe);
 	#endif
