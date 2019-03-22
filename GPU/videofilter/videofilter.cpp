@@ -151,6 +151,8 @@ cl_context context;
 Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel, cl_command_queue queue) {
 	Mat outputMat;
   //buffers
+	printf("check20\n");
+
 
   cl_mem input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
     640*360*sizeof(float), NULL, &status);
