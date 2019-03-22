@@ -363,11 +363,11 @@ int main(int, char**)
     */
 
 
-    Mat grayframe1 = executeConvolution(grayframe, gaussianFilter;
+    Mat grayframe1 = executeConvolution(grayframe, gaussianFilter);
     Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter;
     Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter;
-    edge_x = executeConvolution(grayframe3, SobelXFilter,Sobelkernel1;
-    edge_y = executeConvolution(grayframe3, SobelYFilter,Sobelkernel2;
+    edge_x = executeConvolution(grayframe3, SobelXFilter);
+    edge_y = executeConvolution(grayframe3, SobelYFilter);
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
 
