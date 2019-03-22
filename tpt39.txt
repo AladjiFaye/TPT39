@@ -84,6 +84,7 @@ Scharr est à peu près comme Sobel (?)
 !! il faut aussi modifier le makefile
 padding d'une matrice : ajouter des lignes et colonnes
 im2col : décomposer en plusieurs parties
+essayer en utilisant "local id"
 utiliser batches (ex : batches de 16 frames)
 
 FPGA : Field Programmable Gate Array : tout ce qu'on peut faire en hardware, on peut le faire en FPGA; l'avantage est que le FPGA est programmable

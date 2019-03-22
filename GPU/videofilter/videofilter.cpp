@@ -151,21 +151,36 @@ cl_context context;
 cl_mem input_buf;
 cl_mem output_buf;
 cl_mem filter_buf;
-float * input;
-float * filter;
-float * output;
+float * input = (float *) malloc(sizeof(float)*640*360);
+float * filter = (float *) malloc(sizeof(float)*3*3);
+float * output = (float *) malloc(sizeof(float)*640*360);;
 cl_kernel kernel;
 Mat executeConvolution(Mat& inputMat, float * filterArray) {
 	Mat outputMat;
 
   inputMat.convertTo(inputMat, CV_32FC1);
 
-  input = (float*)inputMat.data;
-  filter = filterArray;
+	input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
+	CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
+	checkError(errcode, "Failed to map input");
 
-  //clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
-  //clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
-  //clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
+	filter = (float *)clEnqueueMapBuffer(queue, filter_buf, CL_TRUE,
+	CL_MAP_WRITE,0,3*3* sizeof(float),0,NULL,&write_event[1],&errcode);
+	checkError(errcode, "Failed to map filter");
+
+	output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
+			CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
+	checkError(errcode, "Failed to map output");
+
+
+
+  //input = (float*)inputMat.data;
+	memcpy(input, (float*)inputMat.data,640*360*sizeof(float));
+  memcpy(filter,filterArray,3*3*sizeof(float));
+
+  clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
+  clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
+  clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 
   const size_t global_work_size[2] = {640,360};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
@@ -174,14 +189,14 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
   status=clWaitForEvents(1,&kernel_event);
     checkError(status, "Failed  wait");
-/*
+
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
-*/
+
 
     //outputMat.convertTo(outputMat,CV_32FC1);
-    outputMat.data = (uchar*)output;
+    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(uchar));
 		//outputMat.convertTo(outputMat,CV_8U);
 
 		//test
@@ -277,17 +292,6 @@ int main(int, char**)
 		checkError(status, "Failed to create filter buffer");
 
 		//mapping values to buffers
-	  input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
-	  CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
-	  checkError(errcode, "Failed to map input");
-
-	  filter = (float *)clEnqueueMapBuffer(queue, filter_buf, CL_TRUE,
-	  CL_MAP_WRITE,0,3*3* sizeof(float),0,NULL,&write_event[1],&errcode);
-	  checkError(errcode, "Failed to map filter");
-
-	  output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
-	      CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
-	  checkError(errcode, "Failed to map output");
 
 		int rows = 640;
 	  int cols = 360;
@@ -368,8 +372,6 @@ int main(int, char**)
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
 
-		printf("Done convolution\n");
-
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
 		time (&end);
@@ -377,13 +379,11 @@ int main(int, char**)
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
     	memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
 		grayframe.copyTo(displayframe,edge);
-		printf("Done copy grayframe\n");
 
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
-		printf("Done cvtColor\n");
 		//test
 		displayframe.convertTo(displayframe,CV_8U);
-		printf("Done convertTo\n");
+
 		outputVideo << displayframe;
 	#ifdef SHOW
         imshow(windowName, displayframe);
