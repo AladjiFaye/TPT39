@@ -283,7 +283,7 @@ int main(int, char**)
 */
 
 
-    float gaussianFilter[9] = {1.0/9,1.0/9,1.0/9,1.0/9,1.0/9,1.0/9,1.0/9,1.0/9,1.0/9};
+    float gaussianFilter[9] = {10,10,10,10,10,10,10,10,10};
     float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
     float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
 
