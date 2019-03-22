@@ -418,7 +418,7 @@ int main(int, char**)
 
 		diff = difftime (end,start);
 		tot+=diff;
-
+		printf("cool");
 	}
 	outputVideo.release();
 	camera.release();
