@@ -210,7 +210,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
     //outputMat.convertTo(outputMat,CV_32FC1);
     memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(float));
-		printf("\ncheck10");
+		printf("\ncheck10\n");
 
 		//outputMat.convertTo(outputMat,CV_8U);
 
