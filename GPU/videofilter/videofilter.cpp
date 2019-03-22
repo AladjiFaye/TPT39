@@ -355,7 +355,7 @@ int main(int, char**)
 		count=count+1;
 		printf("count : %d\n",count);
 
-		if(count > 299) break;
+		if(count > 10) break;
         camera >> cameraFrame;
         Mat filterframe = Mat(cameraFrame.size(), CV_8UC3);
         Mat grayframe,edge_x,edge_y,edge,edge_inv;
