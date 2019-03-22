@@ -151,9 +151,9 @@ cl_context context;
 cl_mem input_buf;
 cl_mem output_buf;
 cl_mem filter_buf;
-float * input = (float *) malloc(sizeof(float)*640*360);
-float * filter = (float *) malloc(sizeof(float)*3*3);
-float * output = (float *) malloc(sizeof(float)*640*360);
+float * input;// = (float *) malloc(sizeof(float)*640*360);
+float * filter;// = (float *) malloc(sizeof(float)*3*3);
+float * output;// = (float *) malloc(sizeof(float)*640*360);
 cl_kernel kernel;
 Mat executeConvolution(Mat& inputMat, float * filterArray) {
 	Mat outputMat;
@@ -179,10 +179,10 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
 
   //input = (float*)inputMat.data;
-	copy((float*)inputMat.data, (float*)inputMat.data+640*360,input);
+	memcpy(input, (float*)inputMat.data,640*360*sizeof(float));
 	printf("check4");
 
-  copy(filterArray,filterArray+3*3,filter);
+  memcpy(filter,filterArray,3*3*sizeof(float));
 	printf("check5");
 
   clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
@@ -204,7 +204,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
 
     //outputMat.convertTo(outputMat,CV_32FC1);
-    copy((uchar*)output, (uchar*)output+640*360, outputMat.data);
+    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(uchar));
 		//outputMat.convertTo(outputMat,CV_8U);
 
 		//test
