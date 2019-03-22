@@ -407,7 +407,7 @@ int main(int, char**)
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
     	memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
 
-		cvtColor(grayframe,grayframe,CV_GRAY2BGR);
+		cvtColor(grayframe,grayframe,CV_BGR2GRAY);
 		grayframe.copyTo(displayframe,edge);
 
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
