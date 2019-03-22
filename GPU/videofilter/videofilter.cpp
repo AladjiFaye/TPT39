@@ -378,19 +378,19 @@ int main(int, char**)
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
     */
 
-		printf("1");
+		printf("1\n");
 
     Mat grayframe1 = executeConvolution(grayframe, gaussianFilter);
-		printf("2");
+		printf("2\n");
 
     Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter);
-		printf("3");
+		printf("3\n");
 
 		Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter);
-		printf("4");
+		printf("4\n");
 
 		edge_y = executeConvolution(grayframe3, SobelYFilter);
-		printf("5");
+		printf("5\n");
 
 		edge_x = executeConvolution(grayframe3, SobelXFilter);
 
