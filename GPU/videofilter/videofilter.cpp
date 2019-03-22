@@ -380,8 +380,8 @@ int main(int, char**)
     float * grayframe1 = executeConvolution(grayframe_array, gaussianFilter);
     float * grayframe2 = executeConvolution(grayframe1, gaussianFilter);
 		float * grayframe3 = executeConvolution(grayframe2, gaussianFilter);
-		float * edge_x_array = executeConvolution(grayframe3, SobelXFilter);
-		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
+		//float * edge_x_array = executeConvolution(grayframe3, SobelXFilter);
+		//float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
 
 		//convert exdgexarray and edgeyarray to edgex et edgey
 		//edge_x = Mat::zeros(640,360,CV_32F/*C1*/);
