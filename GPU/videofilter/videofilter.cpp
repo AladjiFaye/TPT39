@@ -159,36 +159,36 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 	Mat outputMat = Mat(640,360,CV_32FC1);
 
   inputMat.convertTo(inputMat, CV_32FC1);
-	printf("check");
+	printf("\ncheck");
 
 	input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
 	CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
 	checkError(errcode, "Failed to map input");
-	printf("check1");
+	printf("\ncheck1");
 
 	filter = (float *)clEnqueueMapBuffer(queue, filter_buf, CL_TRUE,
 	CL_MAP_WRITE,0,3*3* sizeof(float),0,NULL,&write_event[1],&errcode);
 	checkError(errcode, "Failed to map filter");
-	printf("check2");
+	printf("\ncheck2");
 
 	output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
 			CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
 	checkError(errcode, "Failed to map output");
-	printf("check3");
+	printf("\ncheck3");
 
 
 
   //input = (float*)inputMat.data;
 	memcpy(input, (float*)inputMat.data,640*360*sizeof(float));
-	printf("check4");
+	printf("\ncheck4");
 
   memcpy(filter,filterArray,3*3*sizeof(float));
-	printf("check5");
+	printf("\ncheck5");
 
   clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
-	printf("check6");
+	printf("\ncheck6");
 
   const size_t global_work_size[2] = {640,360};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
@@ -201,10 +201,10 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
-		printf("check7");
+		printf("\ncheck7");
 
 		//resize(outputMat,outputMat, Size(360,640));
-		//printf("check8");
+		//printf("\ncheck8");
 
     //outputMat.convertTo(outputMat,CV_32FC1);
     memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(float));
