@@ -179,10 +179,10 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
 
   //input = (float*)inputMat.data;
-	memcpy(input, (float*)inputMat.data,640*360*sizeof(float));
+	copy((float*)inputMat.data, (float*)inputMat.data+640*360,input);
 	printf("check4");
 
-  memcpy(filter,filterArray,3*3*sizeof(float));
+  copy(filterArray,filterArray+3*3,filter);
 	printf("check5");
 
   clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
@@ -204,7 +204,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
 
     //outputMat.convertTo(outputMat,CV_32FC1);
-    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(uchar));
+    copy((uchar*)output, (uchar*)output+640*360, outputMat.data);
 		//outputMat.convertTo(outputMat,CV_8U);
 
 		//test
