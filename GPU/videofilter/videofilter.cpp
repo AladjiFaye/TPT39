@@ -405,10 +405,11 @@ int main(int, char**)
 		time (&end);
         cvtColor(edge, edge_inv, CV_GRAY2BGR);
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
-    	memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
-			//displayframe = Mat::zeros(640,360,CV_32FC1);
-			grayframe.convertTo(grayframe, CV_8U);
-		grayframe.copyTo(displayframe,edge);
+    	//memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
+			displayframe = Mat::zeros(640,360,CV_GRAY2BGR);
+			grayframe.convertTo(grayframe, CV_GRAY2BGR);
+
+		grayframe.copyTo(displayframe,edge_inv);
 
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
 		//test
