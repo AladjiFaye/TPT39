@@ -222,6 +222,10 @@ Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
     //outputMat.convertTo(outputMat,CV_32FC1);
     outputMat.data = (uchar*)output;
 		//outputMat.convertTo(outputMat,CV_8U);
+
+		//test 
+		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
+
     return outputMat;
 }
 
@@ -267,7 +271,7 @@ int main(int, char**)
   clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
   context = clCreateContext(context_properties, 1, &device, NULL, NULL, NULL);
 
-  cl_command_queue queue = clCreateCommandQueue(context, device, 0, NULL);
+  queue = clCreateCommandQueue(context, device, 0, NULL);
   //cl_command_queue queue2 = clCreateCommandQueue(context, device, 0, NULL);
   //cl_command_queue queue3 = clCreateCommandQueue(context, device, 0, NULL);
   //cl_command_queue queue4 = clCreateCommandQueue(context, device, 0, NULL);
