@@ -391,10 +391,10 @@ int main(int, char**)
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
 		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
-
-		//https://stackoverflow.com/questions/22739320/how-can-i-initialize-a-cvmat-with-data-from-a-float-array
-		edge_x = Mat(640,360,CV_32F,edge_x_array);
-		edge_y = Mat(640,360,CV_32F,edge_y_array);
+		edge_x = Mat::eye(640,360,CV_32F/*C1*/);
+		edge_y = Mat::eye(640,360,CV_32F/*C1*/);
+		//edge_x = Mat(640,360,CV_32FC1,edge_x_array);
+		//edge_y = Mat(640,360,CV_32FC1,edge_y_array);
 
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
