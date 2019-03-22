@@ -204,7 +204,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
 
     //outputMat.convertTo(outputMat,CV_32FC1);
-    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(uchar));
+    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(float));
 		//outputMat.convertTo(outputMat,CV_8U);
 
 		//test
