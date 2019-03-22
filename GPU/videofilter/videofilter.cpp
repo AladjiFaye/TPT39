@@ -376,8 +376,11 @@ int main(int, char**)
 		Scharr(grayframe, edge_x, CV_8U, 0, 1, 1, 0, BORDER_DEFAULT );
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
     */
+		Mat pivot = grayframe;
+		grayframe.convertTo(pivot,CV_32FC1);
 
 		float * grayframe_array = (float *)malloc(640*360*sizeof(float));
+		memcpy(grayframearray,grayframe.data,640*360*sizeof(float));
 
     float * grayframe1 = executeConvolution(grayframe_array, gaussianFilter);
     float * grayframe2 = executeConvolution(grayframe1, gaussianFilter);
