@@ -156,61 +156,61 @@ float * filter;// = (float *) malloc(sizeof(float)*3*3);
 float * output;// = (float *) malloc(sizeof(float)*640*360);
 cl_kernel kernel;
 Mat executeConvolution(Mat& inputMat, float * filterArray) {
-	Mat outputMat = Mat(640,360,CV_32FC1);
+	Mat outputMat = Mat::zeros(640,360,CV_32FC1);
 
   inputMat.convertTo(inputMat, CV_32FC1);
-	printf("\ncheck");
+	printf("check\n");
 
 	input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
 	CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
 	checkError(errcode, "Failed to map input");
-	printf("\ncheck1");
+	printf("check1\n");
 
 	filter = (float *)clEnqueueMapBuffer(queue, filter_buf, CL_TRUE,
 	CL_MAP_WRITE,0,3*3* sizeof(float),0,NULL,&write_event[1],&errcode);
 	checkError(errcode, "Failed to map filter");
-	printf("\ncheck2");
+	printf("check2\n");
 
 	output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
 			CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
 	checkError(errcode, "Failed to map output");
-	printf("\ncheck3");
+	printf("check3\n");
 
 
 
   //input = (float*)inputMat.data;
 	memcpy(input, (float*)inputMat.data,640*360*sizeof(float));
-	printf("\ncheck4");
+	printf("check4\n");
 
   memcpy(filter,filterArray,3*3*sizeof(float));
-	printf("\ncheck5");
+	printf("check5\n");
 
   clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
-	printf("\ncheck6");
+	printf("check6\n");
 
   const size_t global_work_size[2] = {640,360};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
       global_work_size, NULL, 2, write_event, &kernel_event);
   checkError(status, "Failed to launch kernel");
-	printf("\ncheck7");
+	printf("check7\n");
 
   status=clWaitForEvents(1,&kernel_event);
     checkError(status, "Failed  wait");
-		printf("\ncheck8");
+		printf("check8\n");
 
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
-		printf("\ncheck9");
+		printf("check9\n");
 
 		//resize(outputMat,outputMat, Size(360,640));
-		//printf("\ncheck8");
+		//printf("check8");
 
     //outputMat.convertTo(outputMat,CV_32FC1);
-    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(float));
-		printf("\ncheck10\n");
+    memcpy(outputMat.data, output, 640*360*sizeof(float));
+		printf("check10\n");
 
 		//outputMat.convertTo(outputMat,CV_8U);
 
@@ -290,7 +290,7 @@ int main(int, char**)
 
 
     float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
-    //float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
+    float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
     //float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
 
 		//buffers
@@ -386,12 +386,10 @@ int main(int, char**)
 		Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter);
 		printf("4\n");
 
-		edge_x = executeConvolution(grayframe3, gaussianFilter);
+		edge_x = executeConvolution(grayframe3, SobelXFilter);
 		printf("6");
-		//edge_y = executeConvolution(grayframe3, SobelYFilter);
-		//printf("5\n");
-		edge_y=edge_x;
-
+		edge_y = executeConvolution(grayframe3, SobelYFilter);
+		printf("5\n");
 		edge_x.convertTo(edge_x, CV_8U);
 		printf("7");
 
