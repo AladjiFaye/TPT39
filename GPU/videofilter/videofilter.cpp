@@ -156,7 +156,7 @@ float * filter;// = (float *) malloc(sizeof(float)*3*3);
 float * output;// = (float *) malloc(sizeof(float)*640*360);
 cl_kernel kernel;
 Mat executeConvolution(Mat& inputMat, float * filterArray) {
-	Mat outputMat = Mat();
+	Mat outputMat = Mat(640,360,CV_32FC1);
 
   inputMat.convertTo(inputMat, CV_32FC1);
 	printf("check");
@@ -203,11 +203,11 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
     checkError(errcode, "Failed to map output");
 		printf("check7");
 
-		resize(outputMat,outputMat, Size(360,640));
-		printf("check8");
+		//resize(outputMat,outputMat, Size(360,640));
+		//printf("check8");
 
     //outputMat.convertTo(outputMat,CV_32FC1);
-    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(uchar));
+    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(float));
 		//outputMat.convertTo(outputMat,CV_8U);
 
 		//test
