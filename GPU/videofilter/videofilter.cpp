@@ -360,8 +360,8 @@ int main(int, char**)
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
 
 		//test
-		displayFrame.convertTo(displayFrame,CV_8U);
-				
+		displayframe.convertTo(displayframe,CV_8U);
+
 		outputVideo << displayframe;
 		printf("check19\n");
 	#ifdef SHOW
