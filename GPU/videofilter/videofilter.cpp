@@ -163,19 +163,14 @@ float *  executeConvolution(float * inputArray, float * filterArray) {
 	input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
 	CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
 	checkError(errcode, "Failed to map input");
-	printf("check1\n");
 
 	filter = (float *)clEnqueueMapBuffer(queue, filter_buf, CL_TRUE,
 	CL_MAP_WRITE,0,3*3* sizeof(float),0,NULL,&write_event[1],&errcode);
 	checkError(errcode, "Failed to map filter");
-	printf("check2\n");
 
 	output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
 			CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
 	checkError(errcode, "Failed to map output");
-	printf("check3\n");
-
-
 
   //input = (float*)inputMat.data;
 	memcpy(input, inputArray,640*360*sizeof(float));
@@ -377,7 +372,7 @@ int main(int, char**)
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
     */
 		Mat pivot = grayframe;
-		grayframe.convertTo(pivot,CV_32FC1);
+		grayframe.convertTo(pivot,CV_32F/*C1*/);
 
 		float * grayframe_array = (float *)malloc(640*360*sizeof(float));
 		memcpy(grayframe_array,pivot.data,640*360*sizeof(float));
@@ -389,11 +384,17 @@ int main(int, char**)
 		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
 
 		//convert exdgexarray and edgeyarray to edgex et edgey
-		edge_x = Mat::zeros(640,360,CV_32FC1);
-		edge_y = Mat::zeros(640,360,CV_32FC1);
+		//edge_x = Mat::zeros(640,360,CV_32F/*C1*/);
+		//edge_y = Mat::zeros(640,360,CV_32F/*C1*/);
 		printf("ok\n");
-		memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
-		memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
+		//test
+		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
+		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
+		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
+
+		//https://stackoverflow.com/questions/22739320/how-can-i-initialize-a-cvmat-with-data-from-a-float-array
+		edge_x = Mat(640,360,CV_32F,edge_x_array);
+		edge_y = Mat(640,360,CV_32F,edge_y_array);
 
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
