@@ -281,7 +281,7 @@ int main(int, char**)
   //cl_command_queue queue4 = clCreateCommandQueue(context, device, 0, NULL);
   //cl_command_queue queue5 = clCreateCommandQueue(context, device, 0, NULL);
 
-
+/*
   unsigned char **opencl_program=read_file("videofilter.cl");
   program = clCreateProgramWithSource(context, 1, (const char **)opencl_program, NULL, NULL);
   if (program == NULL)
@@ -289,7 +289,7 @@ int main(int, char**)
         printf("Program creation failed\n");
         return 1;
   }
-	/*
+
     int success=clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
     if(success!=CL_SUCCESS) print_clbuild_errors(program,device);
     cl_kernel Gausskernel1 = clCreateKernel(program, "convolution", NULL);
