@@ -148,6 +148,10 @@ int errcode;
 cl_event write_event[2];
 cl_event kernel_event;
 cl_context context;
+cl_mem input_buf;
+cl_mem output_buf;
+cl_mem filter_buf;
+
 Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
 	Mat outputMat;
 
@@ -288,15 +292,15 @@ int main(int, char**)
     float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
 
 		//buffers
-		cl_mem input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
+		input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
 			640*360*sizeof(float), NULL, &status);
 		checkError(status, "Failed to create input buffer");
 
-		cl_mem output_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
+		output_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
 		640*360*sizeof(float), NULL, &status);
 		checkError(status, "Failed to create output buffer");
 
-		cl_mem filter_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
+		filter_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
 		3*3*sizeof(float), NULL, &status);
 		checkError(status, "Failed to create filter buffer");
 
