@@ -11,12 +11,12 @@ __kernel void convolution(__global const float *input,
 
   int i = get_global_id(0); //row
   int j = get_global_id(1); //col
-  output[i*N+j] = 10.0;
+  output[i*N+j] = 128;
   for (int k = -1; k < 1; k++) {
     for (int l = -1; l < 1; l++) {
       //padding at 0 by default
       if (i+k>=0 && i+k<M && j+l>=0 && j+l<N) {
-        output[i*N+j]+=filter[(k+1)*3+(l+1)]*input[(i+k+1)*N+j+1+l];
+        output[i*N+j]+=filter[(k+1)*3+(l+1)]*input[(i+k)*N+j+l];
         //printf("%f %f\n",output[i*N+j],input[i*N+j]);
       }
     }
