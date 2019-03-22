@@ -172,13 +172,8 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
       global_work_size, NULL, 2, write_event, &kernel_event);
   checkError(status, "Failed to launch kernel");
 
-
-	// on test en enlevant l'attente
-  /*status=clWaitForEvents(1,&kernel_event);
+  status=clWaitForEvents(1,&kernel_event);
     checkError(status, "Failed  wait");
-*/
-
-
 /*
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
@@ -263,11 +258,11 @@ int main(int, char**)
     cl_kernel Sobelkernel2 = clCreateKernel(program, "convolution", NULL);
 */
 
-/*
+
     float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
     float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
     float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
-*/
+
 		//buffers
 		input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
 			640*360*sizeof(float), NULL, &status);
@@ -345,6 +340,8 @@ int main(int, char**)
     while (true) {
         Mat cameraFrame,displayframe;
 		count=count+1;
+		printf("count : %d\n",count);
+
 		if(count > 299) break;
         camera >> cameraFrame;
         Mat filterframe = Mat(cameraFrame.size(), CV_8UC3);
@@ -355,14 +352,14 @@ int main(int, char**)
 		time (&start);
 
 
-    	GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
+    	/*GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
     	GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
     	GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
 		Scharr(grayframe, edge_x, CV_8U, 0, 1, 1, 0, BORDER_DEFAULT );
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
+    */
 
 
-/*
     Mat grayframe1 = executeConvolution(grayframe, gaussianFilter);
     Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter);
     Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter);
@@ -370,7 +367,9 @@ int main(int, char**)
     edge_y = executeConvolution(grayframe3, SobelYFilter);
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
-*/
+
+		printf("Done convolution\n");
+
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
 		time (&end);
@@ -378,13 +377,14 @@ int main(int, char**)
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
     	memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
 		grayframe.copyTo(displayframe,edge);
-        cvtColor(displayframe, displayframe, CV_GRAY2BGR);
+		printf("Done copy grayframe\n");
 
+        cvtColor(displayframe, displayframe, CV_GRAY2BGR);
+		printf("Done cvtColor\n");
 		//test
 		displayframe.convertTo(displayframe,CV_8U);
-
+		printf("Done convertTo\n");
 		outputVideo << displayframe;
-		printf("count : %d\n",count);
 	#ifdef SHOW
         imshow(windowName, displayframe);
 	#endif
