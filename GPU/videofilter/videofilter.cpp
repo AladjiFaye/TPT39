@@ -399,6 +399,7 @@ int main(int, char**)
 		edge_y.convertTo(edge_y, CV_8U);
 
 		memcpy(grayframe.data, grayframe3,640*360*sizeof(float));
+		grayframe.convertTo(grayframe, CV_8U);
 
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
