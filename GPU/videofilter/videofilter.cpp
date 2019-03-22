@@ -203,7 +203,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
     checkError(errcode, "Failed to map output");
 		printf("check7");
 
-		resize(outputMat,outputMat, Size(640,360));
+		resize(outputMat,outputMat, Size(360,640));
 		printf("check8");
 
     //outputMat.convertTo(outputMat,CV_32FC1);
