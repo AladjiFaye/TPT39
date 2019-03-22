@@ -216,7 +216,7 @@ float *  executeConvolution(float * inputArray, float * filterArray) {
 		//test
 		//clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 
-    return outputMat;
+    return output;
 }
 
 /*float * convertMatToArray(Mat mat) {
