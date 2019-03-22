@@ -154,8 +154,8 @@ cl_mem filter_buf;
 float * input;
 float * filter;
 float * output;
-
-Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
+cl_kernel kernel;
+Mat executeConvolution(Mat& inputMat, float * filterArray) {
 	Mat outputMat;
 
 
@@ -166,26 +166,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
   input = (float*)inputMat.data;
   filter = filterArray;
 
-  int rows = 640;
-  int cols = 360;
-  // Set kernel arguments.
-  unsigned argi = 0;
 
-  status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &input_buf);
-  checkError(status, "Failed to set argument 1");
-
-
-  status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &output_buf);
-  checkError(status, "Failed to set argument 2");
-
-  status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &filter_buf);
-  checkError(status, "Failed to set argument 3");
-
-  status = clSetKernelArg(kernel, argi++, sizeof(int), (void*)&rows);
-  checkError(status, "Failed to set argument 4");
-
-  status = clSetKernelArg(kernel, argi++, sizeof(int), (void*)&cols);
-  checkError(status, "Failed to set argument 5");
 
   //clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
   //clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
@@ -275,12 +256,12 @@ int main(int, char**)
 
 
 
-    cl_kernel Gausskernel1 = clCreateKernel(program, "convolution", NULL);
-	  cl_kernel Gausskernel2 = clCreateKernel(program, "convolution", NULL);
+    kernel = clCreateKernel(program, "convolution", NULL);
+	  /*cl_kernel Gausskernel2 = clCreateKernel(program, "convolution", NULL);
     cl_kernel Gausskernel3 = clCreateKernel(program, "convolution", NULL);
     cl_kernel Sobelkernel1 = clCreateKernel(program, "convolution", NULL);
     cl_kernel Sobelkernel2 = clCreateKernel(program, "convolution", NULL);
-
+*/
 
 
     float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
@@ -312,6 +293,27 @@ int main(int, char**)
 	  output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
 	      CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
 	  checkError(errcode, "Failed to map output");
+
+		int rows = 640;
+	  int cols = 360;
+	  // Set kernel arguments.
+	  unsigned argi = 0;
+
+	  status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &input_buf);
+	  checkError(status, "Failed to set argument 1");
+
+
+	  status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &output_buf);
+	  checkError(status, "Failed to set argument 2");
+
+	  status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &filter_buf);
+	  checkError(status, "Failed to set argument 3");
+
+	  status = clSetKernelArg(kernel, argi++, sizeof(int), (void*)&rows);
+	  checkError(status, "Failed to set argument 4");
+
+	  status = clSetKernelArg(kernel, argi++, sizeof(int), (void*)&cols);
+	  checkError(status, "Failed to set argument 5");
 
     VideoCapture camera("./bourne.mp4");
     if(!camera.isOpened())  // check if we succeeded
@@ -359,11 +361,13 @@ int main(int, char**)
 		Scharr(grayframe, edge_x, CV_8U, 0, 1, 1, 0, BORDER_DEFAULT );
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
     */
-    Mat grayframe1 = executeConvolution(grayframe, gaussianFilter, Gausskernel1);
-    Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter, Gausskernel2);
-    Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter, Gausskernel3);
-    edge_x = executeConvolution(grayframe3, SobelXFilter,Sobelkernel1);
-    edge_y = executeConvolution(grayframe3, SobelYFilter,Sobelkernel2);
+
+
+    Mat grayframe1 = executeConvolution(grayframe, gaussianFilter;
+    Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter;
+    Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter;
+    edge_x = executeConvolution(grayframe3, SobelXFilter,Sobelkernel1;
+    edge_y = executeConvolution(grayframe3, SobelYFilter,Sobelkernel2;
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
 
