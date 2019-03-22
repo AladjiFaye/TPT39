@@ -16,7 +16,7 @@ __kernel void convolution(__global const float *input,
     for (int l = -1; l < 1; l++) {
       //padding at 0 by default
       if (i+k>=0 && i+k<M && j+l>=0 && j+l<N) {
-        output[i*N+j]+=filter[(k+1)*3+(l+1)]*input[(i+k+1)*N+j+l+1];
+        output[i*N+j]+=filter[(k+1)*3+(l+1)]*input[(i+k)*N+j+l];
       }
     }
   }
