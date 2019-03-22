@@ -377,10 +377,12 @@ int main(int, char**)
 		memcpy(grayframe_array,grayframe.data,640*360*sizeof(float));
 
     float * grayframe1 = executeConvolution(grayframe_array, gaussianFilter);
-    float * grayframe2 = executeConvolution(grayframe1, gaussianFilter);
+    /*float * grayframe2 = executeConvolution(grayframe1, gaussianFilter);
 		float * grayframe3 = executeConvolution(grayframe2, gaussianFilter);
 		float * edge_x_array = executeConvolution(grayframe3, SobelXFilter);
 		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
+*/
+
 
 		//convert exdgexarray and edgeyarray to edgex et edgey
 		//edge_x = Mat::zeros(360,640,CV_32FC1);
