@@ -385,7 +385,6 @@ int main(int, char**)
 		//convert exdgexarray and edgeyarray to edgex et edgey
 		//edge_x = Mat::zeros(360,640,CV_32FC1);
 		//edge_y = Mat::zeros(360,640,CV_32FC1);
-		printf("ok\n");
 		//test
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
