@@ -201,8 +201,11 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
+		printf("check7");
 
 		resize(outputMat,outputMat, Size(640,360));
+		printf("check8");
+
     //outputMat.convertTo(outputMat,CV_32FC1);
     memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(uchar));
 		//outputMat.convertTo(outputMat,CV_8U);
