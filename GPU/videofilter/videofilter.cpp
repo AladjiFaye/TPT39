@@ -284,8 +284,8 @@ int main(int, char**)
 
 
     float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
-    //float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
-    //float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
+    float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
+    float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
 
 		//buffers
 		input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
@@ -380,8 +380,8 @@ int main(int, char**)
     float * grayframe1 = executeConvolution(grayframe_array, gaussianFilter);
     float * grayframe2 = executeConvolution(grayframe1, gaussianFilter);
 		float * grayframe3 = executeConvolution(grayframe2, gaussianFilter);
-		//float * edge_x_array = executeConvolution(grayframe3, SobelXFilter);
-		//float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
+		float * edge_x_array = executeConvolution(grayframe3, SobelXFilter);
+		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
 
 		//convert exdgexarray and edgeyarray to edgex et edgey
 		//edge_x = Mat::zeros(640,360,CV_32F/*C1*/);
@@ -391,10 +391,10 @@ int main(int, char**)
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
 		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
-		edge_x = Mat::eye(640,360,CV_32F/*C1*/);
-		edge_y = Mat::eye(640,360,CV_32F/*C1*/);
-		//edge_x = Mat(640,360,CV_32FC1,edge_x_array);
-		//edge_y = Mat(640,360,CV_32FC1,edge_y_array);
+		//edge_x = Mat::zeros(640,360,CV_32F/*C1*/);
+		//edge_y = Mat::zeros(640,360,CV_32F/*C1*/);
+		edge_x = Mat(640,360,CV_32FC1,edge_x_array);
+		edge_y = Mat(640,360,CV_32FC1,edge_y_array);
 
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
