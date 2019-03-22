@@ -223,7 +223,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
     outputMat.data = (uchar*)output;
 		//outputMat.convertTo(outputMat,CV_8U);
 
-		//test 
+		//test
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 
     return outputMat;
@@ -340,20 +340,21 @@ int main(int, char**)
 		time (&start);
 
 
-    	/*GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
+    	GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
     	GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
     	GaussianBlur(grayframe, grayframe, Size(3,3),0,0);
 		Scharr(grayframe, edge_x, CV_8U, 0, 1, 1, 0, BORDER_DEFAULT );
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
-    */
-    Mat grayframe1 = executeConvolution(grayframe, gaussianFilter, Gausskernel1);
+
+/*
+	  Mat grayframe1 = executeConvolution(grayframe, gaussianFilter, Gausskernel1);
     Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter, Gausskernel2);
     Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter, Gausskernel3);
     edge_x = executeConvolution(grayframe3, SobelXFilter,Sobelkernel1);
     edge_y = executeConvolution(grayframe3, SobelYFilter,Sobelkernel2);
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
-
+*/
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
 		time (&end);
