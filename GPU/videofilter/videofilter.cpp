@@ -151,22 +151,14 @@ cl_context context;
 cl_mem input_buf;
 cl_mem output_buf;
 cl_mem filter_buf;
+float * input;
+float * filter;
+float * output;
 
 Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
 	Mat outputMat;
 
-	//mapping values to buffers
-  float * input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
-  CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
-  checkError(errcode, "Failed to map input");
 
-  float * filter = (float *)clEnqueueMapBuffer(queue, filter_buf, CL_TRUE,
-  CL_MAP_WRITE,0,3*3* sizeof(float),0,NULL,&write_event[1],&errcode);
-  checkError(errcode, "Failed to map filter");
-
-  float * output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
-      CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
-  checkError(errcode, "Failed to map output");
 
 
   inputMat.convertTo(inputMat, CV_32FC1);
@@ -195,9 +187,9 @@ Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
   status = clSetKernelArg(kernel, argi++, sizeof(int), (void*)&cols);
   checkError(status, "Failed to set argument 5");
 
-  clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
-  clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
-  clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
+  //clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
+  //clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
+  //clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 
   const size_t global_work_size[2] = {640,360};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
@@ -206,17 +198,18 @@ Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
 
   status=clWaitForEvents(1,&kernel_event);
     checkError(status, "Failed  wait");
-
+/*
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
+*/
 
     //outputMat.convertTo(outputMat,CV_32FC1);
     outputMat.data = (uchar*)output;
 		//outputMat.convertTo(outputMat,CV_8U);
 
 		//test
-		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
+		//clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 
     return outputMat;
 }
@@ -279,8 +272,11 @@ int main(int, char**)
   }
     int success=clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
     if(success!=CL_SUCCESS) print_clbuild_errors(program,device);
+
+
+
     cl_kernel Gausskernel1 = clCreateKernel(program, "convolution", NULL);
-    cl_kernel Gausskernel2 = clCreateKernel(program, "convolution", NULL);
+	  cl_kernel Gausskernel2 = clCreateKernel(program, "convolution", NULL);
     cl_kernel Gausskernel3 = clCreateKernel(program, "convolution", NULL);
     cl_kernel Sobelkernel1 = clCreateKernel(program, "convolution", NULL);
     cl_kernel Sobelkernel2 = clCreateKernel(program, "convolution", NULL);
@@ -304,6 +300,18 @@ int main(int, char**)
 		3*3*sizeof(float), NULL, &status);
 		checkError(status, "Failed to create filter buffer");
 
+		//mapping values to buffers
+	  input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
+	  CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
+	  checkError(errcode, "Failed to map input");
+
+	  filter = (float *)clEnqueueMapBuffer(queue, filter_buf, CL_TRUE,
+	  CL_MAP_WRITE,0,3*3* sizeof(float),0,NULL,&write_event[1],&errcode);
+	  checkError(errcode, "Failed to map filter");
+
+	  output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
+	      CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
+	  checkError(errcode, "Failed to map output");
 
     VideoCapture camera("./bourne.mp4");
     if(!camera.isOpened())  // check if we succeeded
