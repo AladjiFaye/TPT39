@@ -184,7 +184,7 @@ float *  executeConvolution(float * inputArray, float * filterArray) {
   clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 	//printf("check6\n");
 
-  const size_t global_work_size[2] = {360,640};
+  const size_t global_work_size[2] = {4,4};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
       global_work_size, NULL, 2, write_event, &kernel_event);
   checkError(status, "Failed to launch kernel");
@@ -302,8 +302,8 @@ int main(int, char**)
 
 		//mapping values to buffers
 
-		int rows = 360;
-	  int cols = 640;
+		int rows = 4;
+	  int cols = 4;
 	  // Set kernel arguments.
 	  unsigned argi = 0;
 
