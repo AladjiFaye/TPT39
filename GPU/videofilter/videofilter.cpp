@@ -391,6 +391,7 @@ int main(int, char**)
 		//convert exdgexarray and edgeyarray to edgex et edgey
 		edge_x = Mat::zeros(640,360,CV_32FC1);
 		edge_y = Mat::zeros(640,360,CV_32FC1);
+		printf("ok\n");
 		memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
 		memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
 
