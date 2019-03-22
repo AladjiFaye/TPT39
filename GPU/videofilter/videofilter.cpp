@@ -150,18 +150,6 @@ cl_event kernel_event;
 cl_context context;
 Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
 	Mat outputMat;
-  //buffers
-  cl_mem input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
-    640*360*sizeof(float), NULL, &status);
-  checkError(status, "Failed to create input buffer");
-
-  cl_mem output_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
-  640*360*sizeof(float), NULL, &status);
-  checkError(status, "Failed to create output buffer");
-
-  cl_mem filter_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
-  3*3*sizeof(float), NULL, &status);
-  checkError(status, "Failed to create filter buffer");
 
 	//mapping values to buffers
   float * input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
@@ -223,7 +211,7 @@ Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel) {
     outputMat.data = (uchar*)output;
 		//outputMat.convertTo(outputMat,CV_8U);
 
-		//test 
+		//test
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 
     return outputMat;
@@ -298,6 +286,19 @@ int main(int, char**)
     float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
     float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
     float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
+
+		//buffers
+		cl_mem input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
+			640*360*sizeof(float), NULL, &status);
+		checkError(status, "Failed to create input buffer");
+
+		cl_mem output_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
+		640*360*sizeof(float), NULL, &status);
+		checkError(status, "Failed to create output buffer");
+
+		cl_mem filter_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
+		3*3*sizeof(float), NULL, &status);
+		checkError(status, "Failed to create filter buffer");
 
 
     VideoCapture camera("./bourne.mp4");
