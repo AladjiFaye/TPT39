@@ -412,6 +412,7 @@ int main(int, char**)
 			grayframe.convertTo(grayframe, CV_8U);
 
 			grayframe.copyTo(displayframe,edge);
+			imwrite("/gray_image.jpg",grayframe);
 
         cvtColor(grayframe, displayframe, CV_GRAY2BGR);
 		//test
