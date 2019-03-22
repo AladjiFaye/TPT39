@@ -247,6 +247,8 @@ Mat convertArrayToMat(float * array, int rows, int cols) {
 */
 int main(int, char**)
 {
+
+	/*
   char char_buffer[STRING_BUFFER_LEN];
   cl_platform_id platform;
   cl_device_id device;
@@ -272,6 +274,8 @@ int main(int, char**)
   context = clCreateContext(context_properties, 1, &device, NULL, NULL, NULL);
 
   queue = clCreateCommandQueue(context, device, 0, NULL);
+*/
+
   //cl_command_queue queue2 = clCreateCommandQueue(context, device, 0, NULL);
   //cl_command_queue queue3 = clCreateCommandQueue(context, device, 0, NULL);
   //cl_command_queue queue4 = clCreateCommandQueue(context, device, 0, NULL);
@@ -285,6 +289,7 @@ int main(int, char**)
         printf("Program creation failed\n");
         return 1;
   }
+	/*
     int success=clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
     if(success!=CL_SUCCESS) print_clbuild_errors(program,device);
     cl_kernel Gausskernel1 = clCreateKernel(program, "convolution", NULL);
@@ -298,6 +303,7 @@ int main(int, char**)
     float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
     float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
     float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
+		*/
 
 
     VideoCapture camera("./bourne.mp4");
