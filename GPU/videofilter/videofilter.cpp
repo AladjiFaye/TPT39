@@ -202,9 +202,9 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
 
-
+		resize(outputMat,outputMat, Size(640,360));
     //outputMat.convertTo(outputMat,CV_32FC1);
-    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(float));
+    memcpy(outputMat.data, (uchar*)output, 640*360*sizeof(uchar));
 		//outputMat.convertTo(outputMat,CV_8U);
 
 		//test
