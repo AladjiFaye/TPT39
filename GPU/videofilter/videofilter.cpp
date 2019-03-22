@@ -155,11 +155,10 @@ float * input;// = (float *) malloc(sizeof(float)*640*360);
 float * filter;// = (float *) malloc(sizeof(float)*3*3);
 float * output;// = (float *) malloc(sizeof(float)*640*360);
 cl_kernel kernel;
-Mat executeConvolution(Mat& inputMat, float * filterArray) {
-	Mat outputMat = Mat::zeros(640,360,CV_32FC1);
+float *  executeConvolution(float * inputArray, float * filterArray) {
 
-  inputMat.convertTo(inputMat, CV_32FC1);
-	printf("check\n");
+  //inputMat.convertTo(inputMat, CV_32FC1);
+	//printf("check\n");
 
 	input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
 	CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
@@ -179,38 +178,38 @@ Mat executeConvolution(Mat& inputMat, float * filterArray) {
 
 
   //input = (float*)inputMat.data;
-	memcpy(input, (float*)inputMat.data,640*360*sizeof(float));
-	printf("check4\n");
+	memcpy(input, inputArray,640*360*sizeof(float));
+	//printf("check4\n");
 
   memcpy(filter,filterArray,3*3*sizeof(float));
-	printf("check5\n");
+	//printf("check5\n");
 
   clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
-	printf("check6\n");
+	//printf("check6\n");
 
   const size_t global_work_size[2] = {640,360};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
       global_work_size, NULL, 2, write_event, &kernel_event);
   checkError(status, "Failed to launch kernel");
-	printf("check7\n");
+	//printf("check7\n");
 
   status=clWaitForEvents(1,&kernel_event);
     checkError(status, "Failed  wait");
-		printf("check8\n");
+		//printf("check8\n");
 
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
-		printf("check9\n");
+		//printf("check9\n");
 
 		//resize(outputMat,outputMat, Size(360,640));
 		//printf("check8");
 
     //outputMat.convertTo(outputMat,CV_32FC1);
-    memcpy(outputMat.data, output, 640*360*sizeof(float));
-		printf("check10\n");
+    //memcpy(outputMat.data, output, 640*360*sizeof(float));
+		//printf("check10\n");
 
 		//outputMat.convertTo(outputMat,CV_8U);
 
@@ -378,23 +377,22 @@ int main(int, char**)
 		Scharr(grayframe, edge_y, CV_8U, 1, 0, 1, 0, BORDER_DEFAULT );
     */
 
-		printf("1\n");
-    Mat grayframe1 = executeConvolution(grayframe, gaussianFilter);
-		printf("2\n");
-    Mat grayframe2 = executeConvolution(grayframe1, gaussianFilter);
-		printf("3\n");
-		Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter);
-		printf("4\n");
+		float * grayframe_array = (float *)malloc(640*360*sizeof(float));
 
-		edge_x = executeConvolution(grayframe3, SobelXFilter);
-		printf("6");
-		edge_y = executeConvolution(grayframe3, SobelYFilter);
-		printf("5\n");
+    float * grayframe1 = executeConvolution(grayframe_array, gaussianFilter);
+    float * grayframe2 = executeConvolution(grayframe1, gaussianFilter);
+		float * grayframe3 = executeConvolution(grayframe2, gaussianFilter);
+		float * edge_x_array = executeConvolution(grayframe3, SobelXFilter);
+		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
+
+		//convert exdgexarray and edgeyarray to edgex et edgey
+		edge_x = Mat::zeros(640,360,CV_32FC1);
+		edge_y = Mat::zeros(640,360,CV_32FC1);
+		memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
+		memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
+
 		edge_x.convertTo(edge_x, CV_8U);
-		printf("7");
-
 		edge_y.convertTo(edge_y, CV_8U);
-		printf("8");
 
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
