@@ -156,7 +156,7 @@ float * filter;// = (float *) malloc(sizeof(float)*3*3);
 float * output;// = (float *) malloc(sizeof(float)*640*360);
 cl_kernel kernel;
 Mat executeConvolution(Mat& inputMat, float * filterArray) {
-	Mat outputMat;
+	Mat outputMat = Mat();
 
   inputMat.convertTo(inputMat, CV_32FC1);
 	printf("check");
