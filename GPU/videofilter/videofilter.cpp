@@ -151,9 +151,6 @@ cl_context context;
 Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel, cl_command_queue queue) {
 	Mat outputMat;
   //buffers
-	printf("check20\n");
-
-
   cl_mem input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
     640*360*sizeof(float), NULL, &status);
   checkError(status, "Failed to create input buffer");
@@ -225,8 +222,6 @@ Mat executeConvolution(Mat& inputMat, float * filterArray, cl_kernel kernel, cl_
     //outputMat.convertTo(outputMat,CV_32FC1);
     outputMat.data = (uchar*)output;
 		//outputMat.convertTo(outputMat,CV_8U);
-		printf("check18\n");
-
     return outputMat;
 }
 
@@ -352,30 +347,21 @@ int main(int, char**)
     Mat grayframe3 = executeConvolution(grayframe2, gaussianFilter, Gausskernel3, queue3);
     edge_x = executeConvolution(grayframe3, SobelXFilter,Sobelkernel1, queue4);
     edge_y = executeConvolution(grayframe3, SobelYFilter,Sobelkernel2, queue5);
-		printf("check1\n");
 		edge_x.convertTo(edge_x, CV_8U);
 		edge_y.convertTo(edge_y, CV_8U);
-		printf("check12\n");
-
 
 		addWeighted( edge_x, 0.5, edge_y, 0.5, 0, edge );
-		printf("check13\n");
-
         threshold(edge, edge, 80, 255, THRESH_BINARY_INV);
-				printf("check14\n");
-
 		time (&end);
         cvtColor(edge, edge_inv, CV_GRAY2BGR);
-				printf("check15\n");
-
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
     	memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
 		grayframe.copyTo(displayframe,edge);
-		printf("check16\n");
-
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
-				printf("check17\n");
 
+		//test
+		displayFrame.convertTo(displayFrame,CV_8U);
+				
 		outputVideo << displayframe;
 		printf("check19\n");
 	#ifdef SHOW
