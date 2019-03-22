@@ -395,8 +395,8 @@ int main(int, char**)
 		edge_x = Mat(640,360,CV_32FC1,edge_x_array);
 		edge_y = Mat(640,360,CV_32FC1,edge_y_array);
 
-		edge_x.convertTo(edge_x, CV_8U);
-		edge_y.convertTo(edge_y, CV_8U);
+		//edge_x.convertTo(edge_x, CV_8U);
+		//edge_y.convertTo(edge_y, CV_8U);
 
 		memcpy(grayframe.data, grayframe3,640*360*sizeof(float));
 
@@ -405,14 +405,13 @@ int main(int, char**)
 		time (&end);
         cvtColor(edge, edge_inv, CV_GRAY2BGR);
     	// Clear the output image to black, so that the cartoon line drawings will be black (ie: not drawn).
-    	memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
-
-		cvtColor(grayframe,grayframe,CV_BGR2GRAY);
+    	//memset((char*)displayframe.data, 0, displayframe.step * displayframe.rows);
+			displayframe = Mat::zeros(640,360,CV_32FC1);
 		grayframe.copyTo(displayframe,edge);
 
         cvtColor(displayframe, displayframe, CV_GRAY2BGR);
 		//test
-		displayframe.convertTo(displayframe,CV_8U);
+		//displayframe.convertTo(displayframe,CV_8U);
 
 		outputVideo << displayframe;
 	#ifdef SHOW
