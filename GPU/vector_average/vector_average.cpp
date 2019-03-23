@@ -90,8 +90,8 @@ int main()
 //--------------------------------------------------------------------
 const unsigned N = 50000000;
 float *input_a;//=(float *) malloc(sizeof(float)*N);
-float output;//=(float *) malloc(sizeof(float)*N);
-float ref_output;
+float output=0.0;//=(float *) malloc(sizeof(float)*N);
+float ref_output=0.0;
 cl_mem input_buf; // num_devices elements
 //cl_mem output_buf; // num_devices elements
 int status;
@@ -244,12 +244,10 @@ int status;
 */
 
 // Verify results.
-bool pass = true;
 
       if(fabsf(output - ref_output > 1.0e-5f)) {
         printf("Failed verification\nOutput: %f\nReference: %f\n",
             output, ref_output);
-        pass = false;
       }
 
 
