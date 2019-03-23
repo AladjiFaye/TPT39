@@ -11,7 +11,8 @@ __kernel void convolution(__global const float *input,
 
   int i = get_global_id(0); //row
   int j = get_global_id(1); //col
-  output[i*N+j] = 0;
+  output[i*N+j] = input[i*N+j];
+/*
   for (int k = -1; k < 2; k++) {
     for (int l = -1; l < 2; l++) {
       //padding at 0 by default
@@ -20,5 +21,5 @@ __kernel void convolution(__global const float *input,
       }
     }
   }
-
+*/
 }
