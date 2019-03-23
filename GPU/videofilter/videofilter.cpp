@@ -157,8 +157,6 @@ float * output;// = (float *) malloc(sizeof(float)*640*360);
 cl_kernel kernel;
 float *  executeConvolution(float * inputArray, float * filterArray) {
 
-  //inputMat.convertTo(inputMat, CV_32FC1);
-	//printf("check\n");
 
 	input = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
 	CL_MAP_WRITE,0,640*360* sizeof(float),0,NULL,&write_event[0],&errcode);
@@ -174,62 +172,28 @@ float *  executeConvolution(float * inputArray, float * filterArray) {
 
   //input = (float*)inputMat.data;
 	memcpy(input, inputArray,640*360*sizeof(float));
-	//printf("check4\n");
 
   memcpy(filter,filterArray,3*3*sizeof(float));
-	//printf("check5\n");
 
   clEnqueueUnmapMemObject(queue, input_buf, input, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, filter_buf, filter, 0, NULL, NULL);
   clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
-	//printf("check6\n");
 
   const size_t global_work_size[2] = {360,640};
   status = clEnqueueNDRangeKernel(queue, kernel, 2, NULL,
       global_work_size, NULL, 2, write_event, &kernel_event);
   checkError(status, "Failed to launch kernel");
-	//printf("check7\n");
 
   status=clWaitForEvents(1,&kernel_event);
     checkError(status, "Failed  wait");
-		//printf("check8\n");
 
     output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
         CL_MAP_READ, 0,640*360* sizeof(float),  0, NULL, NULL,&errcode);
     checkError(errcode, "Failed to map output");
-		//printf("check9\n");
-
-		//resize(outputMat,outputMat, Size(360,640));
-		//printf("check8");
-
-    //outputMat.convertTo(outputMat,CV_32FC1);
-    //memcpy(outputMat.data, output, 640*360*sizeof(float));
-		//printf("check10\n");
-
-		//outputMat.convertTo(outputMat,CV_8U);
-
-		//test
-		//clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
 
     return output;
 }
 
-/*float * convertMatToArray(Mat mat) {
-  int cols = mat.cols;
-  int rows = mat.rows;
-  float * result =(float*) malloc(sizeof(float)*cols*rows);
-  for (int i = 0; i < mat.rows; i++) {
-    for (int j = 0; j < mat.cols; j++) {
-      result[i*cols+j] = mat.at<float>(i,j);
-    }
-  }
-  return result;
-}
-
-Mat convertArrayToMat(float * array, int rows, int cols) {
-  //AF
-}
-*/
 int main(int, char**)
 {
   char char_buffer[STRING_BUFFER_LEN];
@@ -353,7 +317,6 @@ int main(int, char**)
     while (true) {
         Mat cameraFrame,displayframe;
 		count=count+1;
-		printf("count : %d\n",count);
 
 		if(count > 299) break;
         camera >> cameraFrame;
@@ -382,15 +345,7 @@ int main(int, char**)
 		float * edge_x_array = executeConvolution(grayframe3, SobelXFilter);
 		float * edge_y_array = executeConvolution(grayframe3, SobelYFilter);
 
-		//convert exdgexarray and edgeyarray to edgex et edgey
-		//edge_x = Mat::zeros(360,640,CV_32FC1);
-		//edge_y = Mat::zeros(360,640,CV_32FC1);
-		//test
 		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, NULL);
-		//memcpy(edge_x.data, edge_x_array,640*360*sizeof(float));
-		//memcpy(edge_y.data, edge_y_array,640*360*sizeof(float));
-		//edge_x = Mat::zeros(360,640,CV_32FC1);
-		//edge_y = Mat::zeros(360,640,CV_32FC1);
 		edge_x = Mat(360,640,CV_32FC1,edge_x_array);
 		edge_y = Mat(360,640,CV_32FC1,edge_y_array);
 
