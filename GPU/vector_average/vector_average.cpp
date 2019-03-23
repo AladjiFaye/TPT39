@@ -235,7 +235,7 @@ int status;
     // Transfer inputs to each device. Each of the host buffers supplied to
     // clEnqueueWriteBuffer here is already aligned to ensure that DMA is used
     // for the host-to-device transfer.
-    cl_event write_event[2];
+    cl_event write_event;
 	cl_event kernel_event/*,finish_event*/;
 //with the "snippets" file
 // Map to host memory
@@ -243,7 +243,7 @@ int status;
 	int errcode;
 
 	input_a = (float *)clEnqueueMapBuffer(queue, input_buf, CL_TRUE,
-			CL_MAP_WRITE,0, N* sizeof(float), 0, NULL, &write_event[0],&errcode);
+			CL_MAP_WRITE,0, N* sizeof(float), 0, NULL, &write_event,&errcode);
 	checkError(errcode, "Failed to map input A");
 
 
@@ -330,8 +330,8 @@ int status;
 
 
 // Release local events.
-clReleaseEvent(write_event[0]);
-clReleaseEvent(write_event[1]);
+clReleaseEvent(write_event);
+//clReleaseEvent(write_event[1]);
 clReleaseKernel(kernel);
 clReleaseCommandQueue(queue);
 clReleaseMemObject(input_buf);
