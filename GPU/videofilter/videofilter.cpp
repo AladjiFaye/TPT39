@@ -247,9 +247,9 @@ int main(int, char**)
 */
 
 
-		float gaussianFilter[9] = {0.0625,0.125,0.0625,0.125,0.25,0.125,0.0625,0.125,0.0625};
-    float SobelXFilter[9] = {-1,0,1,-2,0,2,-1,0,1};
-    float SobelYFilter[9] = {-1,2,-1,0,0,0,1,2,1};
+		float gaussianFilter[9] = {0,0,0,0,1,0,0,0,0};
+    float SobelXFilter[9] = {0,0,0,0,1,0,0,0,0};
+    float SobelYFilter[9] = {0,0,0,0,1,0,0,0,0};
 
 		//buffers
 		input_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
