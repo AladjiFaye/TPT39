@@ -93,7 +93,7 @@ float *input_a;//=(float *) malloc(sizeof(float)*N);
 float output;//=(float *) malloc(sizeof(float)*N);
 float ref_output;
 cl_mem input_buf; // num_devices elements
-cl_mem output_buf; // num_devices elements
+//cl_mem output_buf; // num_devices elements
 int status;
 
 	/*
@@ -148,10 +148,10 @@ int status;
 
 
 	    // Output buffer.
-	    output_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
+/*	    output_buf = clCreateBuffer(context, CL_MEM_ALLOC_HOST_PTR,
 	        sizeof(float), NULL, &status);
 	    checkError(status, "Failed to create buffer for output");
-
+*/
 
 
     // Transfer inputs to each device. Each of the host buffers supplied to
@@ -170,10 +170,10 @@ int status;
 
 
 // Map to host memory
-	output = (float)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
+	/*output = (float)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
 			CL_MAP_READ, 0,sizeof(float),  0, NULL, NULL,&errcode);
 	checkError(errcode, "Failed to map output");
-
+*/
 	for(unsigned j = 0; j < N; ++j) {
 				input_a[j] = rand_float();
 			}
@@ -203,16 +203,16 @@ int status;
     checkError(status, "Failed to set argument 1");
 
 
-    status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &output_buf);
+    status = clSetKernelArg(kernel, argi++, sizeof(cl_mem), &output);
     checkError(status, "Failed to set argument 3");
 
 		clEnqueueUnmapMemObject(queue, input_buf, input_a, 0, NULL, &kernel_event);
 		status=clWaitForEvents(1,&kernel_event);
 	  checkError(status, "Failed  wait");
-		clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, &kernel_event);
+	/*	clEnqueueUnmapMemObject(queue, output_buf, output, 0, NULL, &kernel_event);
 		status=clWaitForEvents(1,&kernel_event);
 	  checkError(status, "Failed  wait");
-
+*/
 		clock_gettime(CLOCK_REALTIME, &start);
 
 
@@ -224,10 +224,10 @@ int status;
 		status=clWaitForEvents(1,&kernel_event);
 	  checkError(status, "Failed  wait");
 
-		output = (float *)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
+	/*	output = (float)clEnqueueMapBuffer(queue, output_buf, CL_TRUE,
 				CL_MAP_READ, 0,N* sizeof(float),  0, NULL, NULL,&errcode);
 		checkError(errcode, "Failed to map output");
-
+*/
 			clock_gettime(CLOCK_REALTIME, &end);
 			diffsec = end.tv_sec - start.tv_sec;
 			diffnsec = end.tv_nsec - start.tv_nsec;
@@ -259,7 +259,7 @@ clReleaseEvent(write_event[1]);
 clReleaseKernel(kernel);
 clReleaseCommandQueue(queue);
 clReleaseMemObject(input_buf);
-clReleaseMemObject(output_buf);
+//clReleaseMemObject(output_buf);
 clReleaseProgram(program);
 clReleaseContext(context);
 
