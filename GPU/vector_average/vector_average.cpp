@@ -296,7 +296,7 @@ int status;
 
     const size_t global_work_size = N;
     status = clEnqueueNDRangeKernel(queue, kernel, 1, NULL,
-        &global_work_size, NULL, 2, write_event, &kernel_event);
+        &global_work_size, NULL, 2, &write_event, &kernel_event);
     checkError(status, "Failed to launch kernel");
 
 		status=clWaitForEvents(1,&kernel_event);
